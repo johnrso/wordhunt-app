@@ -1,29 +1,42 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, json
 
 from board import Board
 from solver import GraphSolver
 from player import Player
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
+app.config['CORS_HEADERS'] = 'Content-Type'
+CORS(app)
 
-current = None
-solver = None
+current = Board('./dictionaries/webster_dictionary.json')
+solver = GraphSolver(current)
+
+solver.solve()
 
 @app.route("/")
 def hello():
     return "Hello World!"
 
 @app.route('/solve', methods=["POST", "GET"])
+@cross_origin(origin='localhost')
 def startSolve():
     global current, solver
-    error = None
-    if request.method == "POST":
+    if request.method != "GET":
         args = request.get_json()
-        if len(args["board"]) == 16:
-            current = Board('./dictionaries/webster_dictionary.json', letters = args["board"])
+        if len(args["letters"]) == 16:
+            current = Board('./dictionaries/webster_dictionary.json', letters = args["letters"])
             solver = GraphSolver(current)
             solver.solve()
-            return "success"
+            p = Player(current, solver.getSolutions())
+            p.play()
+
+            letters = []
+            for i in range(current.width):
+                for j in range(current.height):
+                    letters.append(str(current.board[i][j]))
+
+            return jsonify(solved = solver.getSolutions(), words = current.getOrderedList())
         else:
             return "Incorrectly formatted board."
     else:
@@ -32,11 +45,7 @@ def startSolve():
             for j in range(current.height):
                 letters.append(str(current.board[i][j]))
 
-        if solver:
-            return jsonify(board = letters, solved = solver.getSolutions())
-        else:
-            return jsonify(board = letters, words = [])
+        return jsonify(board = letters, solved = solver.getSolutions(), words = current.getOrderedList())
 
 if __name__ == "__main__":
-    current = Board('./dictionaries/webster_dictionary.json')
     app.run(debug = True)

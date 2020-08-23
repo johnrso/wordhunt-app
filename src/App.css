@@ -4,23 +4,43 @@
   width:100%;
   padding-top: 50%;
   padding-bottom: 50%;
-  background: blue;
+  backgroundColor: blue;
 }
 
 .tile p {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
+  margin: auto;
 }
 
 .board {
+  margin-top: 5%;
   padding-top: 1%;
   padding-bottom: 1%;
-  background-color: #136b19;
 }
 
 .list {
-  background-color: #136b19;
+  overflow-y: scroll;
+  height: 70vh;
+  resize: none;
+  margin-bottom: 3%
+}
+
+.list-non {
+  height: 70vh;
+  resize: none;
+  margin-bottom: 3%
+}
+
+.game {
+  background-color: #e5e6df;
+  height: 102vh;
+}
+
+.submit {
+  margin: auto;
+  text-align: center;
+}
+
+.reset {
+  margin: auto;
+  text-align: center;
 }

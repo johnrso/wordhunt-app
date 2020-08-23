@@ -1,13 +1,10 @@
 import numpy as np
 import random
 from weights import Alphabet
-from colorama import init
-
-init()
 
 class Board:
 
-    points = (0, 0, 0, 300, 400, 800, 1400, 1800, 2000, 0, 0)
+    points = (0, 0, 0, 300, 400, 800, 1400, 1800, 2000, 0, 0, 0, 0, 0)
     width = height = 4
 
     def __init__(self, dict = 'words_dictionary.json', alpha = None, letters = [], dimensions = None):
@@ -39,7 +36,7 @@ class Board:
             for i in range(Board.width):
                 row = []
                 for j in range(Board.height):
-                     row += [Square(i,j, letters[index])]
+                     row += [Square(i,j, letters[index].lower())]
                      index += 1
                 self.board += [row]
 
